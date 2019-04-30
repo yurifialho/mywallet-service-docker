@@ -1,0 +1,39 @@
+version: "2"
+services:
+  mywalletapp:
+    build:
+      dockerfile: ./docker/rails.dockerfile
+      context: .
+    image: fialho/rails:1.0
+    container_name: mywalletapp
+    ports:
+      - 3000:3000
+    networks:
+      - mywallet-net
+    depends_on:
+      - mywalletdb
+    volumes:
+      - ./app:/var/app
+    #command: spring
+    command: rails s -b '0.0.0.0'
+    #command: rails new ./mywallet-service --database=postgresql
+  
+  mywalletdb:
+    image: postgres:10.6
+    container_name: mywalletdb
+    ports:
+      - 5432:5432
+    networks: 
+      - mywallet-net
+    volumes:
+      - mywallet-pg-volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: mywallet
+      POSTGRES_PASSWORD: powertuf
+      POSTGRES_DB: mywallet
+networks:
+  mywallet-net:
+    driver: bridge
+volumes:
+  mywallet-pg-volume:
+    driver: local

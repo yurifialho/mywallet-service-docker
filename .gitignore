@@ -1,0 +1,4 @@
+#Ignore inner project
+app/*
+!app/.gitkeep
+
