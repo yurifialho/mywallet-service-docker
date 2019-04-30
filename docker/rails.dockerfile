@@ -1,11 +1,15 @@
-FROM rails:5.0
+FROM ruby:2.6
+
 MAINTAINER Yuri Fialho <yurirfialho@gmail.com>
 
-#ENV http_proxy http://10.67.120.43:3128
-#ENV https_proxy http://10.67.120.43:3128
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /var/app
-COPY ./app /var/app
-WORKDIR /var/app
+WORKDIR /usr/src/app
+COPY ./app .
 RUN bundle install
-CMD rails -s -b 0.0.0.0
+
+EXPOSE 3000
+CMD ["rails", "server", "-b", "0.0.0.0"]
